@@ -26,7 +26,7 @@ const generateToken = (userId)=>{
         }
 
         //password hashing
-        const salt = bycrpt.genSalt(10);
+        const salt = await bycrpt.genSalt(10);
         const hashedPassword = await bycrpt.hash(password,salt);
 
         //creating user
