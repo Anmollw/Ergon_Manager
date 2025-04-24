@@ -1,5 +1,6 @@
 const User = require("../models/User");
 const bycrpt = require("bcryptjs");
+const { json } = require("express");
 const jwt = require("jsonwebtoken");
 
 const generateToken = (userId)=>{
@@ -9,6 +10,44 @@ const generateToken = (userId)=>{
 // route : POST /api/v1/auth/register
  const registerUser = async (req,res)=>{
     try {
+        const {name, email, password, profileImageUrl, adminInviteToken } = req.body;
+        // checking if user exists
+        const userExists = await User.findOne({ email });
+        if (userExists){
+            return res.send(400).json({
+                message : "User already exists"
+            });
+        }
+
+        //Admin member role logic
+        let role = "member"
+        if ( adminInviteToken && adminInviteToken === process.env.ADMIN_INVITE_TOKEN){
+            role = "admin";
+        }
+
+        //password hashing
+        const salt = bycrpt.genSalt(10);
+        const hashedPassword = await bycrpt.hash(password,salt);
+
+        //creating user
+        const user = await User.create({
+            name,
+            email,
+            password: hashedPassword,
+            profileImageUrl,
+            role,
+        })
+
+        // Return user
+
+        res.status(201).json({
+            _id : user._id,
+            name : user.name,
+            email : user.email,
+            role : user.role,
+            profileImageUrl: user.profileImageUrl,
+            token : generateToken(user._id),
+        });
 
     } 
     catch(error){
