@@ -8,7 +8,7 @@ const generateToken = (userId)=>{
 };
 
 // route : POST /api/v1/auth/register
- const registerUser = async (req,res)=>{
+const registerUser = async (req,res)=>{
     try {
         const {name, email, password, profileImageUrl, adminInviteToken } = req.body;
         // checking if user exists
@@ -55,12 +55,49 @@ const generateToken = (userId)=>{
             message : "Server Error" , error : error.message
         });
     }
- };
+};
 
 
 
- // route : POST /api/v1/auth/login
- const loginUser = async(req,res)=>{
+// route : POST /api/v1/auth/login
+const loginUser = async(req,res)=>{
+    try {
+        const {email , password} = req.body;
+
+        const user = await User.findOne({ email });
+        if(!user){
+            return res.status(401).json({
+                message : "Invalid email or password"
+            })
+        }
+
+        const isMatch = await bycrpt.compare(password,user.password);
+        if(!isMatch){
+            return res.status(401).json({
+                message : "Invalid email or password"
+            });
+        }
+
+        res.json({
+            _id : user._id,
+            name : user.name,
+            email : user.email,
+            role : user.role,
+            profileImageUrl : user.profileImageUrl,
+            token : generateToken(user._id),
+        });
+    } 
+    catch(error){
+        res.status(500).json({
+            message : "Server Error" , error : error.message
+        });
+    }
+};
+
+
+
+// route : GET /api/auth/profile ( private , jwt required)
+const getUserProfile = async(req,res)=>{
     try {
 
     } 
@@ -69,12 +106,12 @@ const generateToken = (userId)=>{
             message : "Server Error" , error : error.message
         });
     }
- };
+};
 
 
 
- // route : GET /api/auth/profile ( private , jwt required)
- const getUserProfile = async(req,res)=>{
+// route :  PUT /api/auth/profile
+const updateUserProfile= async(req,res)=>{
     try {
 
     } 
@@ -83,20 +120,6 @@ const generateToken = (userId)=>{
             message : "Server Error" , error : error.message
         });
     }
- };
-
-
-
- // route :  PUT /api/auth/profile
- const updateUserProfile= async(req,res)=>{
-    try {
-
-    } 
-    catch(error){
-        res.status(500).json({
-            message : "Server Error" , error : error.message
-        });
-    }
- };
+};
 
  module.exports = { registerUser, loginUser, getUserProfile, updateUserProfile};
