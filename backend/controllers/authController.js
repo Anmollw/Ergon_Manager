@@ -99,6 +99,13 @@ const loginUser = async(req,res)=>{
 // route : GET /api/auth/profile ( private , jwt required)
 const getUserProfile = async(req,res)=>{
     try {
+        const user = await User.findById(req.user.id).select("-password");
+        if(!user){
+            return res.status(401).json({
+                message : "User not found"
+            });
+        }
+        res.json(user);
 
     } 
     catch(error){
@@ -113,6 +120,32 @@ const getUserProfile = async(req,res)=>{
 // route :  PUT /api/auth/profile
 const updateUserProfile= async(req,res)=>{
     try {
+        const user = await User.findById(req.user.id);
+        
+        if(!user){
+            return res.status(404).json({
+                message : "User not found"
+            });
+        }
+
+        user.name = req.body.name || user.name;
+        user.email = req.body.email || user.email;
+
+        if ( req.body.password){
+            const salt = await bycrpt.genSalt(10);
+            user.password = await bycrpt.hash(req.body.password,salt);
+        }
+
+        const updatedUser = await user.save();
+        
+        res.json({
+            _id : updatedUser._id,
+            name : updatedUser.name,
+            email : updatedUser.email,
+            role : updatedUser.role,
+            token : generateToken(updatedUser._id),
+
+        })
 
     } 
     catch(error){
