@@ -68,17 +68,5 @@ const getUserById = async(req,res)=>{
 
 
 
-//route : DELETE /api/v1/users/:id
-const deleteUser = async(req,res)=>{
-    try{
 
-    } catch(error){
-        res.status(500).json({
-            message : "Server Error" , error : error.message
-        });
-    }
-};
-
-
-
-module.exports = { getUsers , getUserById , deleteUser};
+module.exports = { getUsers , getUserById};
