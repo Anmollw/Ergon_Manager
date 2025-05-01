@@ -209,6 +209,35 @@ const deleteTask = async(req,res)=>{
 //route : PUT /api/v1/tasks/:id/status
 const updateTaskStatus = async(req,res)=>{
     try{
+        const task = await Task.findById(req.params.id);
+        
+        if(!task){
+            return res.status(404).json({
+                message : "Task not found"
+            });
+        }
+        
+        const isAssigned = task.assignedTo.some(
+            (userId) => userId.toString() === req.user._id.toString()
+        );
+
+        if(!isAssigned && req.user.role !== "admin"){
+            return res.status(403).json({
+                message : "Not Authorized"
+            });
+        }
+
+        task.status = req.body.status || task.status;
+
+        if(task.status === "Completed"){
+            task.todoChecklist.forEach((item)=> (item.completed = true));
+            task.progress = 100;
+        }
+
+        await task.save();
+        res.json({
+            message : "Task status updated", task
+        });
 
     } catch(error){
         res.status(500).json({
