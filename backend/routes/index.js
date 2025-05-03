@@ -6,9 +6,9 @@ const authRouter = require("./authRoutes");
 const taskRouter = require("./taskRoutes");
 const reportRouter = require("./reportRoutes");
 
-router.use('/user',userRouter);
+router.use('/users',userRouter);
 router.use('/auth',authRouter);
-router.use('/task', taskRouter);
+router.use('/tasks', taskRouter);
 router.use('/report',reportRouter);
 
 module.exports= router
