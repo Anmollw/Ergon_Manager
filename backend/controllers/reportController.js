@@ -24,8 +24,31 @@ const exportTasksReport = async(req,res) => {
         ];
 
         tasks.forEach((task)=>{
-            
-        })
+            const assignedTo = task.assignedTo.map((user)=> `${user.name} (${user.email})`).join(",");
+            worksheet.addRow({
+                _id : task._id,
+                title : task.title,
+                description : task.description,
+                priority : task.priority,
+                status : task.status,
+                dueDate : task.dueDate.toISOString().split()("T")[0],
+                assignedTo : assignedTo || "Unassigned",
+            });
+        });
+
+        res.setHeader(                                             // telling client (new learning)
+            "Content-Type",
+            "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet"
+        );
+
+        res.setHeader(
+            "Content-Disposition",                                   //handling response(new learning)
+            ' attachment; filename="tasks_report.xlsx" '
+        );
+
+        return workbook.xlsx.write(res).then(()=>{
+            res.end();
+        });
 
     } 
     catch(error){
