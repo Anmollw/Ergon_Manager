@@ -13,7 +13,12 @@ const ProfilePhotoSelector = ({image,setImage})=>{
             const preview = URL.createObjectURL(file);
             setPreviewUrl(preview);
         }
-    }
+    };
+
+    const handleRemoveImage = ()=>{
+        setImage(null);
+        setPreviewUrl(null);
+    };
     return (
         <div>
             pfp Selector
