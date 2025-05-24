@@ -32,11 +32,9 @@ export const API_PATHS = {
     REPORTS : {
         EXPORT_TASKS : " /api/v1/reports/export/tasks " , 
         EXPORT_USERS : " /api/v1/reports/export/users " , 
-    } ,
+    },
 
     IMAGE : {
         UPLOAD_IMAGE : " api/v1/auth/upload-image " ,
-    } ,
-
-
-}
+    },
+};

@@ -1,8 +1,8 @@
 import React, { useState  } from "react"
 import AuthLayout from "../../components/layouts/AuthLayout"
 import { Link, useNavigate } from "react-router-dom";
-import Input from "../../components/inputs/Input";
 import { validateEmail } from "../../utils/helper";
+import Input from "../../components/Inputs/Input";
 
 const Login=()=>{
     const [email,setEmail] = useState("");
@@ -25,6 +25,12 @@ const Login=()=>{
         }
 
         setError("");
+
+        try{
+
+        } catch(error){
+            
+        }
 
     };
 
