@@ -1,6 +1,6 @@
 const Task = require("../models/Task");
 const User = require("../models/User");
-const excelJS = require("../exceljs");
+const excelJS = require('exceljs');
 
 //route : GET /api/v1/reports/export/tasks
 const exportTasksReport = async(req,res) => {

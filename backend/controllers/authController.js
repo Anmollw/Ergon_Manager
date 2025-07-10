@@ -1,10 +1,10 @@
 const User = require("../models/User");
-const bycrpt = require("bcryptjs");
+const bcrypt = require("bcryptjs");
 const { json } = require("express");
 const jwt = require("jsonwebtoken");
 
 const generateToken = (userId)=>{
-    return jwt.sign({id : userId} , process.env.JWT_SECRET, {expiresIn : "7d"});
+    return jwt.sign({id : userId} , process.env.JWT_SECRET,{expiresIn : "7d"});
 };
 
 // route : POST /api/v1/auth/register
@@ -26,8 +26,8 @@ const registerUser = async (req,res)=>{
         }
 
         //password hashing
-        const salt = await bycrpt.genSalt(10);
-        const hashedPassword = await bycrpt.hash(password,salt);
+        const salt = await bcrypt.genSalt(10);
+        const hashedPassword = await bcrypt.hash(password,salt);
 
         //creating user
         const user = await User.create({
@@ -71,7 +71,7 @@ const loginUser = async(req,res)=>{
             })
         }
 
-        const isMatch = await bycrpt.compare(password,user.password);
+        const isMatch = await bcrypt.compare(password,user.password);
         if(!isMatch){
             return res.status(401).json({
                 message : "Invalid email or password"
