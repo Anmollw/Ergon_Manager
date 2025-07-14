@@ -1,6 +1,6 @@
 import React from "react";
 import { BrowserRouter, Route, Routes } from "react-router-dom";
-import Dashboard from "./pages/User/UserDashBoard";
+import Dashboard from "./pages/Admin/DashBoard"
 import PrivateRoute from "./routes/PrivateRoute";
 import Login from "./pages/Auth/Login";
 import SignUp from "./pages/Auth/SignUp";
@@ -10,11 +10,13 @@ import ManageUsers from "./pages/Admin/ManageUsers";
 import UserDashboard from "./pages/User/UserDashBoard";
 import MyTask from "./pages/User/MyTasks";
 import ViewTaskDetails from "./pages/User/ViewTaskDetails";
+import UserProvider from "./context/usercontext";
 
 
 function App() {
 
   return (
+    <UserProvider>
     <div>
       <BrowserRouter>
         <Routes>
@@ -39,6 +41,7 @@ function App() {
         </Routes>
         </BrowserRouter>  
     </div>
+    </UserProvider>
   )
 }
 
